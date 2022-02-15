@@ -51,7 +51,11 @@ function SelfieSegmentationComp() {
     useEffect(() => {
         const videoElement = document.getElementsByClassName('input_video')[0];
 
-        const selfieSegmentation = new SelfieSegmentation();
+        const selfieSegmentation = new SelfieSegmentation({
+            locateFile: (file) => {
+                return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`;
+            }
+        });
         selfieSegmentation.setOptions({
             modelSelection: 1,
             effect: 'background',
