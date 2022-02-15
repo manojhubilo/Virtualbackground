@@ -21,7 +21,7 @@ function SelfieSegmentationComp() {
             canvasCtx.drawImage(results.segmentationMask, 0, 0, canvasElement.width, canvasElement.height);
             canvasCtx.globalCompositeOperation = 'source-out';
             var blueprint_background = new Image();
-            blueprint_background.src = '/tech-paper.png';
+            blueprint_background.src = 'https://i.redd.it/vo9vm1fcqrp71.jpg';
             blueprint_background.onload = function () {
                 var pattern = canvasCtx.createPattern(this, "repeat");
                 canvasCtx.fillStyle = pattern;
@@ -73,8 +73,8 @@ function SelfieSegmentationComp() {
             onFrame: async () => {
                 await selfieSegmentation.send({ image: videoElement });
             },
-            width: 1280,
-            height: 720
+            width: 750,
+            height: 420
         });
         camera.start();
 
@@ -96,6 +96,7 @@ function SelfieSegmentationComp() {
 
     return (
         <div className='selfie_segmentation_container'>
+            <img id="bgImg" alt="abc" src="https://i.redd.it/vo9vm1fcqrp71.jpg"  height="420" width="750" hidden/>
             <video className="input_video" height="420" width="750"></video>
             <canvas className="output_canvas" height="420px" width="750px" ></canvas>
             <br />
