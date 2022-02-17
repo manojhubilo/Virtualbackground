@@ -1,5 +1,5 @@
 import './App.css';
-import SelfieSegmentationComp from './mediapipe/selfie-segment';
+import SelfieSegmentationComp from './mediapipe/selfie-segment-v2';
 
 
 function App() {

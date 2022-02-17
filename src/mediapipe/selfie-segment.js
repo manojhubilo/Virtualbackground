@@ -20,13 +20,10 @@ function SelfieSegmentationComp() {
         if (filterValue === "2") {
             canvasCtx.drawImage(results.segmentationMask, 0, 0, canvasElement.width, canvasElement.height);
             canvasCtx.globalCompositeOperation = 'source-out';
+            canvasCtx.filter = `blur(${0}px)`;
             var blueprint_background = new Image();
-            blueprint_background.src = 'https://i.redd.it/vo9vm1fcqrp71.jpg';
-            blueprint_background.onload = function () {
-                var pattern = canvasCtx.createPattern(this, "repeat");
-                canvasCtx.fillStyle = pattern;
-            };
-            canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+            blueprint_background.src = 'https://i.redd.it/vo9vm1fcqrp71.jpg';            
+            canvasCtx.drawImage(blueprint_background, 0, 0, canvasElement.width, canvasElement.height);
 
             // Only overwrite missing pixels.
             canvasCtx.globalCompositeOperation = 'destination-atop';
@@ -34,14 +31,14 @@ function SelfieSegmentationComp() {
         }
         // blur solution   
         else if (filterValue === "3") {
-            canvasCtx.filter = `blur(1px)`;
+            canvasCtx.filter = `blur(12px)`;
             canvasCtx.drawImage(results.segmentationMask, 0, 0, canvasElement.width, canvasElement.height);
             canvasCtx.globalCompositeOperation = "source-in";
             canvasCtx.filter = "none";
             canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
             canvasCtx.globalCompositeOperation = "destination-over";
-            canvasCtx.filter = `blur(4px)`;
+            canvasCtx.filter = `blur(10px)`;
             canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
         }
@@ -74,7 +71,7 @@ function SelfieSegmentationComp() {
                 await selfieSegmentation.send({ image: videoElement });
             },
             width: 750,
-            height: 420
+            height: 420,
         });
         camera.start();
 
@@ -85,24 +82,30 @@ function SelfieSegmentationComp() {
 
     }, [onResults]);
 
-    // useEffect(()=>{
-    //     const canvasElement = document.getElementsByClassName('output_canvas')[0];
-    //     const nextVideoElement = document.getElementById("next-video");
+    useEffect(()=>{
+        setTimeout(()=>{
+            const canvasElement = document.getElementsByClassName('output_canvas')[0];
+        const nextVideoElement = document.getElementById("next-video");
 
-    //     var stream = canvasElement.captureStream(25);
-    //     // Set the source of the <video> element to be the stream from the <canvas>.
-    //     nextVideoElement.srcObject = stream;
-    // },[filterValue])
+        var stream = canvasElement.captureStream(25);
+        // Set the source of the <video> element to be the stream from the <canvas>.
+        nextVideoElement.srcObject = stream;
+        nextVideoElement.onloadedmetadata = function(e) {
+            nextVideoElement.play();
+          }; 
+
+        },3000)
+    },[filterValue])
 
     return (
         <div className='selfie_segmentation_container'>
-            <img id="bgImg" alt="abc" src="https://i.redd.it/vo9vm1fcqrp71.jpg"  height="420" width="750" hidden/>
-            <video className="input_video" height="420" width="750"></video>
-            <canvas className="output_canvas" height="420px" width="750px" ></canvas>
+            <img id="bgImg" alt="abc" src="https://i.redd.it/vo9vm1fcqrp71.jpg"  height="400" width="640" hidden/>
+            <video className="input_video" height="400" width="640"></video>
+            <canvas className="output_canvas" height="400px" width="640px" ></canvas>
             <br />
             <label>filter value <input type="number" max={3} min={1} value={filterValue} onChange={(event) => { setUseBlur(event.target.value) }} /></label>
             <br/>
-            {/* <video id="next-video"/> */}
+            <video id="next-video"/>
         </div>
     );
 }
